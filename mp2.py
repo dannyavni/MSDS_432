@@ -68,3 +68,9 @@ for test_data_len in test_data_len_list:
 
         #insert the results into a new dataframe record 
         test_data.loc[len(test_data)] = [test_data_len, test_data_type, sort_ms]
+
+
+#plain text data dump of the test results
+test_data
+
+		
