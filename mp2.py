@@ -73,4 +73,16 @@ for test_data_len in test_data_len_list:
 #plain text data dump of the test results
 test_data
 
-		
+#plot the binary and linear search results against the data length
+plt.figure(figsize=(8,8))
+
+for test_data_type in test_data_types:
+    plt.plot(
+        test_data[test_data.data_type==test_data_type].length, 
+        test_data[test_data.data_type==test_data_type].sort_ms, label = test_data_type)
+
+plt.legend()
+plt.xlabel('data size')
+plt.ylabel('runtime (msec)')
+plt.title('selection sort runtime (msec)')
+plt.show()
