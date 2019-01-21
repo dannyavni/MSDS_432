@@ -54,3 +54,15 @@ for random_int in random_ints:
 	
 #plain text data dump of the test results
 test_data
+
+#plot the binary and linear search results against the data length
+plt.figure(figsize=(8,8))
+
+plt.plot(test_data.number, test_data.iterative_ms)
+plt.plot(test_data.number, test_data.recursive_ms)
+
+plt.legend()
+plt.xlabel('data size')
+plt.ylabel('runtime (msec)')
+plt.title('recursive versus iterative factorial runtime (msec)')
+plt.show()
