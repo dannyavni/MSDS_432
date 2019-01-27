@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import time
 import random
+import sys
 
 # recursuve facorial implemntation adapted retrieved from:
 # https://github.com/egonSchiele/grokking_algorithms/blob/master/02_selection_sort/python/01_selection_sort.py
@@ -12,7 +13,7 @@ def recursive_fact(x):
   if x == 1:
     return 1
   else:
-    return x * recusive_fact(x-1)
+    return x * recursive_fact(x-1)
 	
 # iterative factorial solution u
 
@@ -66,3 +67,43 @@ plt.xlabel('data size')
 plt.ylabel('runtime (msec)')
 plt.title('recursive versus iterative factorial runtime (msec)')
 plt.show()
+
+class TailRecurseException(BaseException):
+  def __init__(self, args, kwargs):
+    self.args = args
+    self.kwargs = kwargs
+
+def tail_call_optimized(g):
+  """
+  This function decorates a function with tail call
+  optimization. It does this by throwing an exception
+  if it is it's own grandparent, and catching such
+  exceptions to fake the tail call optimization.
+  
+  This function fails if the decorated
+  function recurses in a non-tail context.
+  """
+  def func(*args, **kwargs):
+    f = sys._getframe()
+    if f.f_back and f.f_back.f_back \
+        and f.f_back.f_back.f_code == f.f_code:
+      raise TailRecurseException(args, kwargs)
+    else:
+      while 1:
+        try:
+          return g(*args, **kwargs)
+        except TailRecurseException as err:
+          args = err.args
+          kwargs = err.kwargs
+  func.__doc__ = g.__doc__
+  return func
+
+@tail_call_optimized
+def tail_factorial(n, acc=1):
+    "calculate a factorial"
+    if n == 0:
+       return acc
+    res = tail_factorial(n-1, n*acc)
+    return res
+	
+print(tail_factorial(3001))
